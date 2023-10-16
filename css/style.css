@@ -1,0 +1,37 @@
+:root {
+  --primary: #52126e;
+  --secondary: #e3f1ac;
+  --accent: #4ab41d;
+  --background: #e9e5fb;
+  --text: #070416;
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  color: var(--text);
+}
+body {
+  background-color: var(--background);
+}
+li {
+  list-style-type: none;
+}
+
+nav {
+  width: 100%;
+  display: flex;
+}
+nav ul {
+  display: flex;
+}
+
+.nav_link {
+  padding: 1rem;
+  cursor: pointer;
+  transition: ease-in-out 300ms;
+}
+.nav_link:hover {
+  background-color: var(--text);
+  color: var(--background);
+}
