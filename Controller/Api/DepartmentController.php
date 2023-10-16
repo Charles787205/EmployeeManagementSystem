@@ -55,7 +55,7 @@ class DepartmentController extends BaseController {
     
     $this->sendOutput(json_encode($response));
 }
-  public function deleteFunction(){
+  public function deleteAction(){
       $requestData = file_get_contents('php://input');
       $data = json_decode($requestData, true);
       $departmentModel = new DepartmentModel();
