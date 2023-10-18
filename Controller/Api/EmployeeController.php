@@ -51,7 +51,7 @@ class EmployeeController extends BaseController
         $employee->setDepartmentId($data['departmentId']);
         $employee->setMobileNumber($data['mobileNumber']);
         $employee->setSalaryRate($data['salaryRate']);
-        $employee->setPassword($data['password']);
+        
         $employee->setBirthDate($data['birthDate']);
 
         
@@ -71,7 +71,27 @@ class EmployeeController extends BaseController
             
         }
     }
+    public function imageAction(){
+       $requestData = file_get_contents('php://input');
+       $data = json_decode($requestData, true);
+       $employee = new Employee();
+       $employee->setId( $data['id']);
+       $employee->setImage($data['image']);
 
+       header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+        header('Content-Type: application/json');
+
+        $employeeModel = new EmployeeModel();
+        if($employeeModel -> updateEmployeeImage($employee)){
+          $this->sendOutput(
+            $employee->toJson()
+          );
+
+        }
+       
+    }
     public function updateAction(){
       $requestData = file_get_contents('php://input');
         
@@ -89,11 +109,10 @@ class EmployeeController extends BaseController
         $employee->setDepartmentId($data['departmentId']);
         $employee->setMobileNumber($data['mobileNumber']);
         $employee->setSalaryRate($data['salaryRate']);
-        $employee->setPassword($data['password']);
         $employee->setBirthDate($data['birthDate']);
 
         
-        header('Access-Control-Allow-Origin: *'); // Replace * with the specific origin you want to allow.
+        header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type');
         header('Content-Type: application/json');

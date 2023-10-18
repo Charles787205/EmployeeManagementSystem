@@ -8,19 +8,29 @@ class EmployeeModel extends Database
 
         if(!empty($requestData)){
           $query_string .= ' WHERE ';
-          foreach($requestData as $key => $value){
-            if($key === 'id'){
-              $query_string .= "employee.".strval($key) . '=' . strval($value);
-            }else{
-
-              $query_string .= strval($key) . '=' . strval($value);
-            }
-        }
           
-      }
-        $query_string .= " ORDER BY id DESC";
-        
-        return $this->select($query_string);
+          foreach($requestData as $key => $value){
+            if($key == 'email'){  
+              $query_string .= 'employee.email = ?';
+              $stmt = $this->connection->prepare($query_string);
+              $stmt->bind_param('s',  $value);
+            } 
+            else{
+              $query_string .= 'employee.id = ?';
+              $stmt = $this->connection->prepare($query_string);
+              $stmt->bind_param('i', $value);
+            }
+          }
+          $query_string .= " ORDER BY id DESC";
+          $stmt->execute();
+        }else{
+
+          $query_string .= " ORDER BY id DESC";
+          $stmt = $this->connection->prepare($query_string);
+          $stmt->execute();
+        }
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        return $result;
         
     
   }
@@ -29,8 +39,8 @@ class EmployeeModel extends Database
 
     
     public function insertEmployee(Employee $employee) {
-    $query = "INSERT INTO employee (email, birthdate, position, gender, mobileNumber, salaryRate, password, departmentId, firstName, lastName) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO employee (email, birthdate, position, gender, mobileNumber, salaryRate, departmentId, firstName, lastName) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     try {
         // Check if the email already exists
@@ -44,20 +54,19 @@ class EmployeeModel extends Database
         $gender = $employee->getGender();
         $mobileNumber = $employee->getMobileNumber();
         $salaryRate = $employee->getSalaryRate();
-        $password = $employee->getPassword();
+        
         $departmentId = $employee->getDepartmentId();
         $firstName = $employee->getFirstName();
         $lastName = $employee->getLastName();
 
         $stmt = $this->connection->prepare($query);
-        $stmt->bind_param('sssssdsiss',
+        $stmt->bind_param('sssssdiss',
             $email,
             $birthdate,
             $position,
             $gender,
             $mobileNumber,
             $salaryRate,
-            $password,
             $departmentId,
             $firstName,
             $lastName
@@ -70,7 +79,13 @@ class EmployeeModel extends Database
     }
   }
 
-
+    public function updateEmployeeImage($employee){
+      $query = 'UPDATE employee SET image=? WHERE id=?';
+      $image = $employee->getImage();
+      $stmt = $this->connection->prepare($query);
+      $stmt->bind_param('si', $employee->getImage(), $employee->getId());
+      $stmt->execute();
+    }
 
     public function isEmailExist($email){
       return $this->select("SELECT email  FROM employee WHERE email='". $email ."'");
@@ -80,7 +95,7 @@ class EmployeeModel extends Database
     }
 
     public function updateEmployee($employee){
-    $query = "UPDATE employee SET email=?, birthdate=?, position=?, gender=?, mobileNumber=?, salaryRate=?, password=?, departmentId=?, firstName=?, lastName=? WHERE id=?";
+    $query = "UPDATE employee SET email=?, birthdate=?, position=?, gender=?, mobileNumber=?, salaryRate=?, departmentId=?, firstName=?, lastName=? WHERE id=?";
       
     try {
         $email = $employee->getEmail();
@@ -89,14 +104,13 @@ class EmployeeModel extends Database
         $gender = $employee->getGender();
         $mobileNumber = $employee->getMobileNumber();
         $salaryRate = $employee->getSalaryRate();
-        $password = $employee->getPassword();
         $departmentId = $employee->getDepartmentId();
         $firstName = $employee->getFirstName();
         $lastName = $employee->getLastName();
         $id = $employee->getId();
         
         $stmt = $this->connection->prepare($query);
-        $stmt->bind_param('sssssdsissi', $email, $birthdate, $position, $gender, $mobileNumber, $salaryRate, $password, $departmentId, $firstName, $lastName, $id);
+        $stmt->bind_param('sssssdissi', $email, $birthdate, $position, $gender, $mobileNumber, $salaryRate,  $departmentId, $firstName, $lastName, $id);
 
         $stmt->execute();
         return $stmt;

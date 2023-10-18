@@ -1,6 +1,6 @@
 <?php 
  class Employee {
-  private $id, $firstName, $lastName, $birthDate, $position, $gender, $mobileNumber, $salaryRate, $password, $departmentId, $department, $email;
+  private $id, $firstName, $lastName, $birthDate, $position, $gender, $mobileNumber, $salaryRate, $password, $departmentId, $department, $email, $image;
 
   
   public function setId($id){
@@ -11,6 +11,7 @@
     $this -> firstName = $firstName;
     $this -> lastName = $lastName;
   }
+  
   public function setFirstName($firstName){
     $this -> firstName = $firstName;
   }
@@ -33,9 +34,7 @@
   public function setSalaryRate($salaryRate){
     $this -> salaryRate = $salaryRate;
   }
-  public function setPassword($password){
-    $this -> password = $password;
-  }
+  
   public function setDepartmentId($id){
     $this -> departmentId = $id;
   }
@@ -45,28 +44,31 @@
   public function setEmail($email){
     $this->email = $email;
   }
+  public function setImage($image){
+    $this->image =$image;
+  }
 
   public function getId(){
     return $this->id;
   }
   public function getFirstName(){
-    return $this -> firstName;
+    return strtoupper($this -> firstName);
   }
   public function getLastName(){
-    return $this-> lastName;
+    return strtoupper($this-> lastName);
   }
   public function getName() {
-    return $this->firstName .' '.$this->lastName;
+    return $this->getFirstName() .' '.$this->getLastName();
   }
   public function getBirthDate(){
     
-    return strval($this->birthDate);
+    return strtoupper(strval($this->birthDate));
   }
   public function getPosition(){
-    return $this->position;
+    return strtoupper($this->position);
   }
   public function getGender(){
-    return $this->gender;
+    return strtoupper($this->gender);
   }
   public function getMobileNumber(){
     return $this->mobileNumber;
@@ -74,17 +76,18 @@
   public function getSalaryRate(){
     return $this->salaryRate;
   }
-  public function getPassword(){
-    return $this->password;
-  }
+  
   public function getDepartmentId(){
     return $this->departmentId;
   }
   public function getDepartment(){
-    return $this->department;
+    return strtoupper($this->department);
   }
   public function getEmail(){
     return $this->email;
+  }
+  public function getImage(){
+    return $this->image;
   }
   public function toJson() {
         return json_encode([
@@ -96,10 +99,10 @@
             'gender' => $this->getGender(),
             'mobileNumber' => $this->getMobileNumber(),
             'salaryRate' => $this->getSalaryRate(),
-            'password' => $this->getPassword(),
             'departmentId' => $this->getDepartmentId(),
             'department' => $this->getDepartment(),
-            'email' => $this->getEmail()
+            'email' => $this->getEmail(),
+            'image'=> $this->getImage()
         ]);
     }
  }

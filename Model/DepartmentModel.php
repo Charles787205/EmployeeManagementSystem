@@ -4,7 +4,7 @@ class DepartmentModel extends Database
 {
     public function getDepartments()
     {
-        return $this->select("SELECT * FROM department");
+        return $this->select("SELECT * FROM department  ORDER BY id DESC");
     }
 
 
