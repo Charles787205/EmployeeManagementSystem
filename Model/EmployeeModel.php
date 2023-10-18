@@ -11,12 +11,18 @@ class EmployeeModel extends Database
           
           foreach($requestData as $key => $value){
             if($key == 'email'){  
-              $query_string .= 'employee.email = ?';
+              $query_string .= 'employee.email = ? ';
               $stmt = $this->connection->prepare($query_string);
               $stmt->bind_param('s',  $value);
-            } 
+
+            }else if($key == 'departmentId'){  
+              $query_string .= 'employee.departmentId = ? ';
+              $stmt = $this->connection->prepare($query_string);
+              $stmt->bind_param('i',  $value);
+            }
+            
             else{
-              $query_string .= 'employee.id = ?';
+              $query_string .= 'employee.id = ? ';
               $stmt = $this->connection->prepare($query_string);
               $stmt->bind_param('i', $value);
             }
